@@ -18,9 +18,16 @@ package org.sourcepit.akka.mongodb;
 
 import static org.junit.Assert.*;
 
+import java.lang.reflect.Method;
+
 import org.junit.Test;
 
+import foo.Bar;
+import foo.MongoDB2;
+import foo.MongoDB2$;
+import foo.MongoDBExtension;
 import akka.actor.ActorSystem;
+import akka.actor.ExtensionId;
 
 public class MongoExtensionTest {
 
@@ -38,6 +45,30 @@ public class MongoExtensionTest {
       MongoDB ext3 = system.extension(MongoDB.ID);
       assertNotNull(ext3);
       assertSame(ext2, ext3);
+   }
+   
+   @Test
+   public void testGetExtension2() {
+      ActorSystem system;
+      system = ActorSystem.create();
+      MongoDBExtension ext1 = MongoDB2.get(system);
+      assertNotNull(ext1);
+
+      system = ActorSystem.create();
+      MongoDBExtension ext2 = MongoDB2.get(system);
+      assertNotNull(ext2);
+      assertNotSame(ext1, ext2);
+      ExtensionId<MongoDBExtension> lookup = MongoDB2.lookup();
+      MongoDBExtension ext3 = system.extension(lookup);
+      assertNotNull(ext3);
+      assertSame(ext2, ext3);
+   }
+
+   @Test
+   public void testGetScalaExtension() throws Exception {
+      Object meths = new Bar("jui").getClass().getSuperclass();
+      System.out.println(meths);
+
 
    }
 
